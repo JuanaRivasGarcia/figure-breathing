@@ -2,6 +2,9 @@
 
 # Import modules
 from abc import ABC, abstractmethod
+import math
+import tkinter as tk
+
 
 class Figure(ABC):
     def __init__(self, table, center_x, center_y, colour="skyblue"):
@@ -44,3 +47,42 @@ class Triangle(Figure):
             self.center_x + size, self.center_y + size, # Bottom-right
             fill=self.colour, outline=""
         )
+
+
+class Star(Figure):
+    def to_draw(self, size):
+        self.delete()
+        points = 10 # 5-pointed star
+        coordinates = [] # This is were we store x, y coordinates
+
+        for i in range(points):
+            if i % 2 == 0:  # If it’s an even number, it’s a point
+                # The distance is the line segment from the centre point to the tip of the star 
+                distance = size
+            else:  # If it’s an odd number, it’s a valley
+                #Distance is the line from the centre point to the valley point
+                distance = size * 0.4
+
+            angle = i * (2 * math.pi / points)
+            x = self.center_x + distance * math.cos(angle)
+            y = self.center_y + distance * math.sin(angle)
+
+            coordinates.append(x)
+            coordinates.append(y)
+
+        self.drawing = self.table.create_polygon(
+            coordinates, fill=self.colour, outline=""
+        )
+
+
+# Setting the table
+window = tk.Tk()
+window.title("Figure test")
+canvas = tk.Canvas(window, width=400, height=400, bg="white")
+canvas.pack()
+
+# Creation of the figure
+figure = Star(canvas, 200, 200)
+figure.to_draw(80)
+
+window.mainloop()
