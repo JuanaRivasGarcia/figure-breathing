@@ -85,4 +85,19 @@ canvas.pack()
 figure = Star(canvas, 200, 200)
 figure.to_draw(80)
 
+#window.mainloop()
+
+initial_size = 20
+final_size = 100
+growth = final_size - initial_size
+delay = 20 # milliseconds between each step of the animation
+
+def to_inspire(step, total_steps):
+    size = initial_size + (growth / total_steps) * step
+    figure.to_draw(size)
+    if step < total_steps:
+        # I program the next step until the final size is reached
+        window.after(delay, lambda: to_inspire(step + 1, total_steps))
+
+to_inspire(0, 200)
 window.mainloop()
