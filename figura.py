@@ -83,8 +83,8 @@ canvas.pack()
 
 # Creation of the figure
 figure = Star(canvas, 200, 200)
-figure.to_draw(80)
 
+#figure.to_draw(80)
 #window.mainloop()
 
 initial_size = 20
@@ -93,11 +93,22 @@ growth = final_size - initial_size
 delay = 20 # milliseconds between each step of the animation
 
 def to_inspire(step, total_steps):
+    '''Increase the size of the geometric shape'''
     size = initial_size + (growth / total_steps) * step
     figure.to_draw(size)
     if step < total_steps:
         # I program the next step until the final size is reached
         window.after(delay, lambda: to_inspire(step + 1, total_steps))
 
-to_inspire(0, 200)
+#to_inspire(0, 200)
+#window.mainloop()
+
+def to_exhale(step, total_steps):
+    '''Reduce the size of the geometric shape'''
+    size = final_size - (growth / total_steps) * step
+    figure.to_draw(size)
+    if step < total_steps:
+        window.after(delay, lambda: to_exhale(step + 1, total_steps))
+
+to_exhale(0, 200)
 window.mainloop()
