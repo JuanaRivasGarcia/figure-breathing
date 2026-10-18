@@ -75,23 +75,14 @@ class Star(Figure):
         )
 
 
-# Setting the table
-window = tk.Tk()
-window.title("Figure test")
-canvas = tk.Canvas(window, width=400, height=400, bg="white")
-canvas.pack()
-
-# Creation of the figure
-figure = Star(canvas, 200, 200)
-
-#figure.to_draw(80)
-#window.mainloop()
-
+# --- Variables ---
 initial_size = 20
 final_size = 100
 growth = final_size - initial_size
 delay = 20 # milliseconds between each step of the animation
+retention = 300
 
+# --- Inspiration ---
 def to_inspire(step, total_steps):
     '''Increase the size of the geometric shape'''
     size = initial_size + (growth / total_steps) * step
@@ -100,9 +91,8 @@ def to_inspire(step, total_steps):
         # I program the next step until the final size is reached
         window.after(delay, lambda: to_inspire(step + 1, total_steps))
 
-#to_inspire(0, 200)
-#window.mainloop()
 
+# --- Exhalation ---
 def to_exhale(step, total_steps):
     '''Reduce the size of the geometric shape'''
     size = final_size - (growth / total_steps) * step
@@ -110,5 +100,18 @@ def to_exhale(step, total_steps):
     if step < total_steps:
         window.after(delay, lambda: to_exhale(step + 1, total_steps))
 
-to_exhale(0, 200)
-window.mainloop()
+
+# --- Retention ---
+def to_hold(hold_time, total_steps):
+    '''Holding: waiting without changing position'''
+    window.after(hold_time, lambda: to_exhale(0, total_steps))
+
+
+# --- Setting the table ---
+window = tk.Tk()
+window.title("Figure test")
+canvas = tk.Canvas(window, width=400, height=400, bg="white")
+canvas.pack()
+
+# --- Creation of the figure ---
+figure = Circle(canvas, 200, 200)
