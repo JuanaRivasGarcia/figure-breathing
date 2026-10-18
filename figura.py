@@ -80,7 +80,7 @@ initial_size = 20
 final_size = 100
 growth = final_size - initial_size
 delay = 20 # milliseconds between each step of the animation
-retention = 300
+retention = 3000
 
 # --- Inspiration ---
 def to_inspire(step, total_steps):
@@ -90,6 +90,8 @@ def to_inspire(step, total_steps):
     if step < total_steps:
         # I program the next step until the final size is reached
         window.after(delay, lambda: to_inspire(step + 1, total_steps))
+    else:
+        window.after(delay, lambda: to_hold(retention, total_steps))
 
 
 # --- Exhalation ---
@@ -99,6 +101,8 @@ def to_exhale(step, total_steps):
     figure.to_draw(size)
     if step < total_steps:
         window.after(delay, lambda: to_exhale(step + 1, total_steps))
+    else:
+        window.after(delay, lambda: to_inspire(0, total_steps))
 
 
 # --- Retention ---
@@ -115,3 +119,6 @@ canvas.pack()
 
 # --- Creation of the figure ---
 figure = Circle(canvas, 200, 200)
+
+to_inspire(0, 200)
+window.mainloop()
