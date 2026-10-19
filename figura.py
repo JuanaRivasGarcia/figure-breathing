@@ -4,6 +4,7 @@
 from abc import ABC, abstractmethod
 import math
 import tkinter as tk
+import time
 
 
 class Figure(ABC):
@@ -79,8 +80,11 @@ class Star(Figure):
 initial_size = 20
 final_size = 100
 growth = final_size - initial_size
-delay = 20 # milliseconds between each step of the animation
+delay = 20 # Milliseconds between each step of the animation
 retention = 3000
+start_time = time.time() # The moment the session begins
+total_duration = 30 # Session duration
+
 
 # --- Inspiration ---
 def to_inspire(step, total_steps):
@@ -102,7 +106,11 @@ def to_exhale(step, total_steps):
     if step < total_steps:
         window.after(delay, lambda: to_exhale(step + 1, total_steps))
     else:
-        window.after(delay, lambda: to_inspire(0, total_steps))
+        elapsed_time = time.time() - start_time
+        if elapsed_time < total_duration:
+            window.after(delay, lambda: to_inspire(0, total_steps))
+        else:
+            pass
 
 
 # --- Retention ---
