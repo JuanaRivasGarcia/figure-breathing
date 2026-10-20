@@ -81,43 +81,62 @@ initial_size = 20
 final_size = 100
 growth = final_size - initial_size
 delay = 20 # Milliseconds between each step of the animation
-retention = 3000
+#retention = 3000
 start_time = time.time() # The moment the session begins
 total_duration = 30 # Session duration
 
+# --- Function of time ---
+def seconds_to_ms(seconds):
+    '''Convert seconds to milliseconds'''
+    milliseconds = seconds * 1000
+    return milliseconds
+
+def seconds_to_steps(seconds):
+    '''Convert seconds to animation steps'''
+    step_per_seconds = 1000 / delay # the number of steps that fit into one second, calculated based on the delay
+    steps = int(seconds * step_per_seconds)
+    return steps
+
 
 # --- Inspiration ---
-def to_inspire(step, total_steps):
+def to_inhale(step, inhalation_steps, retention_ms, exhalation_steps):
     '''Increase the size of the geometric shape'''
-    size = initial_size + (growth / total_steps) * step
+    size = initial_size + (growth / inhalation_steps) * step
     figure.to_draw(size)
-    if step < total_steps:
+    if step < inhalation_steps:
         # I program the next step until the final size is reached
-        window.after(delay, lambda: to_inspire(step + 1, total_steps))
+        window.after(delay, lambda: to_inhale(step + 1, inhalation_steps, retention_ms, exhalation_steps))
     else:
-        window.after(delay, lambda: to_hold(retention, total_steps))
+        window.after(delay, lambda: to_hold(retention_ms, inhalation_steps, exhalation_steps))
 
 
 # --- Exhalation ---
-def to_exhale(step, total_steps):
+def to_exhale(step, exhalation_steps, inhalation_steps, retention_ms):
     '''Reduce the size of the geometric shape'''
-    size = final_size - (growth / total_steps) * step
+    size = final_size - (growth / exhalation_steps) * step
     figure.to_draw(size)
-    if step < total_steps:
-        window.after(delay, lambda: to_exhale(step + 1, total_steps))
+    if step < exhalation_steps:
+        window.after(delay, lambda: to_exhale(step + 1, exhalation_steps, inhalation_steps, retention_ms))
     else:
         elapsed_time = time.time() - start_time
         if elapsed_time < total_duration:
-            window.after(delay, lambda: to_inspire(0, total_steps))
+            window.after(delay, lambda: to_inhale(0, inhalation_steps, retention_ms, exhalation_steps))
         else:
             pass
 
 
 # --- Retention ---
-def to_hold(hold_time, total_steps):
+def to_hold(retention_ms, ihnalation_steps, exhalation_steps):
     '''Holding: waiting without changing position'''
-    window.after(hold_time, lambda: to_exhale(0, total_steps))
+    window.after(retention_ms, lambda: to_exhale(0, exhalation_steps, ihnalation_steps, retention_ms))
 
+# --- Questions ---
+inhalation = int(input("How many seconds should you inhale for?: "))
+inhalation_steps = seconds_to_steps(inhalation)
+retention = int(input("How many seconds should you hold your breath for?: "))
+retention_ms = seconds_to_ms(retention)
+exhalation = int(input("How many seconds should you exhale for?: "))
+exhalation_steps = seconds_to_steps(exhalation)
 
 # --- Setting the table ---
 window = tk.Tk()
@@ -128,5 +147,5 @@ canvas.pack()
 # --- Creation of the figure ---
 figure = Circle(canvas, 200, 200)
 
-to_inspire(0, 200)
+to_inhale(0, inhalation_steps, retention_ms, exhalation_steps)
 window.mainloop()
