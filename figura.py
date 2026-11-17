@@ -87,12 +87,17 @@ total_duration = 30 # Session duration
 
 # --- Function of time ---
 def seconds_to_ms(seconds):
-    '''Convert seconds to milliseconds'''
+    '''Convert seconds to milliseconds.'''
     milliseconds = seconds * 1000
     return milliseconds
 
+def minutes_to_seconds(minutes):
+    '''Convert minutes to seconds.'''
+    seconds = minutes * 60
+    return seconds
+
 def seconds_to_steps(seconds):
-    '''Convert seconds to animation steps'''
+    '''Convert seconds to animation steps.'''
     step_per_seconds = 1000 / delay # the number of steps that fit into one second, calculated based on the delay
     steps = int(seconds * step_per_seconds)
     return steps
@@ -100,7 +105,7 @@ def seconds_to_steps(seconds):
 
 # --- Inspiration ---
 def to_inhale(step, inhalation_steps, retention_ms, exhalation_steps):
-    '''Increase the size of the geometric shape'''
+    '''Increase the size of the geometric shape.'''
     size = initial_size + (growth / inhalation_steps) * step
     figure.to_draw(size)
     if step < inhalation_steps:
@@ -112,23 +117,23 @@ def to_inhale(step, inhalation_steps, retention_ms, exhalation_steps):
 
 # --- Exhalation ---
 def to_exhale(step, exhalation_steps, inhalation_steps, retention_ms):
-    '''Reduce the size of the geometric shape'''
+    '''Reduce the size of the geometric shape.'''
     size = final_size - (growth / exhalation_steps) * step
     figure.to_draw(size)
     if step < exhalation_steps:
         window.after(delay, lambda: to_exhale(step + 1, exhalation_steps, inhalation_steps, retention_ms))
     else:
         elapsed_time = time.time() - start_time
-        if elapsed_time < total_duration:
+        if elapsed_time < session_seconds:
             window.after(delay, lambda: to_inhale(0, inhalation_steps, retention_ms, exhalation_steps))
         else:
             pass
 
 
 # --- Retention ---
-def to_hold(retention_ms, ihnalation_steps, exhalation_steps):
-    '''Holding: waiting without changing position'''
-    window.after(retention_ms, lambda: to_exhale(0, exhalation_steps, ihnalation_steps, retention_ms))
+def to_hold(retention_ms, inhalation_steps, exhalation_steps):
+    '''Holding: waiting without changing position.'''
+    window.after(retention_ms, lambda: to_exhale(0, exhalation_steps, inhalation_steps, retention_ms))
 
 # --- Questions ---
 inhalation = int(input("How many seconds should you inhale for?: "))
@@ -137,6 +142,10 @@ retention = int(input("How many seconds should you hold your breath for?: "))
 retention_ms = seconds_to_ms(retention)
 exhalation = int(input("How many seconds should you exhale for?: "))
 exhalation_steps = seconds_to_steps(exhalation)
+session = int(input("How many minutes should the session last?: "))
+session_seconds = minutes_to_seconds(session)
+# Session context(start_time, session_seconds) stays global on purpose:
+# It's not phase data passed through the cycle, so we don't thread it as arguments.
 
 # --- Setting the table ---
 window = tk.Tk()
