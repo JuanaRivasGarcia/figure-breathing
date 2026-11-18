@@ -144,6 +144,18 @@ session_seconds = minutes_to_seconds(session)
 # Session context(start_time, session_seconds) stays global on purpose:
 # It's not phase data passed through the cycle, so we don't thread it as arguments.
 
+## --- Choose figure ---
+while True:
+    figure_choice = input("Choose a geometric shape (circle, triangle or star): ").lower()
+    if figure_choice == "circle":
+        break
+    elif figure_choice == "triangle":
+        break
+    elif figure_choice == "star":
+        break
+    else:
+        print("Please, enter a valid option.")
+
 # --- Setting the table ---
 window = tk.Tk()
 window.title("Figure test")
@@ -151,7 +163,12 @@ canvas = tk.Canvas(window, width=400, height=400, bg="white")
 canvas.pack()
 
 # --- Creation of the figure ---
-figure = Circle(canvas, 200, 200)
+if figure_choice == "circle":
+    figure = Circle(canvas, 200, 200)
+elif figure_choice == "triangle":
+    figure = Triangle(canvas, 200, 200)
+elif figure_choice == "star":
+    figure = Star(canvas, 200, 200)
 
 start_time = time.time() # The moment the session begins
 to_inhale(0, inhalation_steps, retention_ms, exhalation_steps)
