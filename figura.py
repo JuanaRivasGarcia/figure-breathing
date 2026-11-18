@@ -81,9 +81,6 @@ initial_size = 20
 final_size = 100
 growth = final_size - initial_size
 delay = 20 # Milliseconds between each step of the animation
-#retention = 3000
-start_time = time.time() # The moment the session begins
-total_duration = 30 # Session duration
 
 # --- Function of time ---
 def seconds_to_ms(seconds):
@@ -156,5 +153,6 @@ canvas.pack()
 # --- Creation of the figure ---
 figure = Circle(canvas, 200, 200)
 
+start_time = time.time() # The moment the session begins
 to_inhale(0, inhalation_steps, retention_ms, exhalation_steps)
 window.mainloop()
