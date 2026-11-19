@@ -122,7 +122,7 @@ def to_exhale(step, exhalation_steps, inhalation_steps, retention_ms):
     else:
         elapsed_time = time.time() - start_time
         if elapsed_time < session_seconds:
-            window.after(delay, lambda: to_inhale(0, inhalation_steps, retention_ms, exhalation_steps))
+            window.after(bottom_hold_ms, lambda: to_inhale(0, inhalation_steps, retention_ms, exhalation_steps))
         else:
             pass
 
@@ -133,16 +133,29 @@ def to_hold(retention_ms, inhalation_steps, exhalation_steps):
     window.after(retention_ms, lambda: to_exhale(0, exhalation_steps, inhalation_steps, retention_ms))
 
 # --- Questions ---
+
 inhalation = int(input("How many seconds should you inhale for?: "))
 inhalation_steps = seconds_to_steps(inhalation)
 retention = int(input("How many seconds should you hold your breath for?: "))
 retention_ms = seconds_to_ms(retention)
 exhalation = int(input("How many seconds should you exhale for?: "))
 exhalation_steps = seconds_to_steps(exhalation)
+while True:
+    breathing_type = input("Choose breathing type (3 = 3-phase, 4 = 4-phase): ")
+    if breathing_type == "3":
+        bottom_hold_ms = delay # No bottom hold: continue almost inmediately.
+        break
+    elif breathing_type == "4":
+        bottom_hold = int(input("How many seconds should you hold your breath after exhale?:"))
+        bottom_hold_ms = seconds_to_ms(bottom_hold)
+        break
+    else:
+        print("Please, enter a valid option.")
 session = int(input("How many minutes should the session last?: "))
 session_seconds = minutes_to_seconds(session)
 # Session context(start_time, session_seconds) stays global on purpose:
 # It's not phase data passed through the cycle, so we don't thread it as arguments.
+
 
 ## --- Choose figure ---
 while True:
