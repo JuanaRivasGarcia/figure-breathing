@@ -82,7 +82,7 @@ final_size = 100
 growth = final_size - initial_size
 delay = 20 # Milliseconds between each step of the animation
 
-# --- Function of time ---
+# --- Functions ---
 def seconds_to_ms(seconds):
     '''Convert seconds to milliseconds.'''
     milliseconds = seconds * 1000
@@ -99,6 +99,14 @@ def seconds_to_steps(seconds):
     steps = int(seconds * step_per_seconds)
     return steps
 
+def ask_number(question):
+    '''Ask for a number, repeating until the input is valid; returns it as an integer.'''
+    while True:
+        number = input(question)
+        if number.isdigit():
+            return int(number)
+        else:
+            print("Please, enter a valid option.")
 
 # --- Inspiration ---
 def to_inhale(step, inhalation_steps, retention_ms, exhalation_steps):
@@ -134,24 +142,24 @@ def to_hold(retention_ms, inhalation_steps, exhalation_steps):
 
 # --- Questions ---
 
-inhalation = int(input("How many seconds should you inhale for?: "))
+inhalation = ask_number("How many seconds should you inhale for?: ")
 inhalation_steps = seconds_to_steps(inhalation)
-retention = int(input("How many seconds should you hold your breath for?: "))
+retention = ask_number("How many seconds should you hold your breath for?: ")
 retention_ms = seconds_to_ms(retention)
-exhalation = int(input("How many seconds should you exhale for?: "))
+exhalation = ask_number("How many seconds should you exhale for?: ")
 exhalation_steps = seconds_to_steps(exhalation)
 while True:
     breathing_type = input("Choose breathing type (3 = 3-phase, 4 = 4-phase): ")
     if breathing_type == "3":
-        bottom_hold_ms = delay # No bottom hold: continue almost inmediately.
+        bottom_hold_ms = delay # No bottom hold: continue almost immediately.
         break
     elif breathing_type == "4":
-        bottom_hold = int(input("How many seconds should you hold your breath after exhale?:"))
+        bottom_hold = ask_number("How many seconds should you hold your breath after exhale?:")
         bottom_hold_ms = seconds_to_ms(bottom_hold)
         break
     else:
         print("Please, enter a valid option.")
-session = int(input("How many minutes should the session last?: "))
+session = ask_number("How many minutes should the session last?: ")
 session_seconds = minutes_to_seconds(session)
 # Session context(start_time, session_seconds) stays global on purpose:
 # It's not phase data passed through the cycle, so we don't thread it as arguments.
@@ -171,7 +179,7 @@ while True:
 
 # --- Setting the table ---
 window = tk.Tk()
-window.title("Figure test")
+window.title("Breathing")
 canvas = tk.Canvas(window, width=400, height=400, bg="white")
 canvas.pack()
 
