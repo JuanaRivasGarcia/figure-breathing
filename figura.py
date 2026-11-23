@@ -81,6 +81,23 @@ initial_size = 20
 final_size = 100
 growth = final_size - initial_size
 delay = 20 # Milliseconds between each step of the animation
+dark_colours = {
+    "descent": "#3D3219",
+    "support": "#837C37",
+    "release": "#507088",
+    "confidence": "#44584D",
+    "depth": "#293933",
+    "integration": "#858667",
+}
+
+light_colours = {
+    "breath": "#7D9CC4",
+    "threshold": "#93ACA4",
+    "clarity": "#CEDBFE",
+    "relief": "#EFEEEB",
+    "pause": "#CED4CD",
+    "balance": "#B0B8A3",
+}
 
 # --- Functions ---
 def seconds_to_ms(seconds):
@@ -105,6 +122,15 @@ def ask_number(question):
         number = input(question)
         if number.isdigit():
             return int(number)
+        else:
+            print("Please, enter a valid option.")
+
+def ask_colour(question, palette):
+    '''Find the selected color in the palette'''
+    while True:
+        choice = input(question).lower()
+        if choice in palette:
+            return palette[choice]
         else:
             print("Please, enter a valid option.")
 
@@ -164,6 +190,10 @@ session_seconds = minutes_to_seconds(session)
 # Session context(start_time, session_seconds) stays global on purpose:
 # It's not phase data passed through the cycle, so we don't thread it as arguments.
 
+figure_colour = ask_colour("Choose a shape colour (descent, support, release, " \
+                            "confidence, depth or integration):", dark_colours)
+background_colour = ask_colour("Choose a background colour (breath, threshold, " \
+                            "clarity, relief, pause or balance): ", light_colours)
 
 ## --- Choose figure ---
 while True:
@@ -180,16 +210,16 @@ while True:
 # --- Setting the table ---
 window = tk.Tk()
 window.title("Breathing")
-canvas = tk.Canvas(window, width=400, height=400, bg="white")
+canvas = tk.Canvas(window, width=400, height=400, bg=background_colour)
 canvas.pack()
 
 # --- Creation of the figure ---
 if figure_choice == "circle":
-    figure = Circle(canvas, 200, 200)
+    figure = Circle(canvas, 200, 200, figure_colour)
 elif figure_choice == "triangle":
-    figure = Triangle(canvas, 200, 200)
+    figure = Triangle(canvas, 200, 200, figure_colour)
 elif figure_choice == "star":
-    figure = Star(canvas, 200, 200)
+    figure = Star(canvas, 200, 200, figure_colour)
 
 start_time = time.time() # The moment the session begins
 to_inhale(0, inhalation_steps, retention_ms, exhalation_steps)

@@ -8,6 +8,7 @@ A terminal app that draws a geometric shape. The shape moves in sync with your b
 - Always ends on an exhalation.
 - Choose between 3-phase or 4-phase breathing.
 - Validates input, so invalid answers don’t crash the program.
+- Customize the background and shape colors.
 
 ## Requirements
 - Python 3.x
@@ -37,6 +38,5 @@ The program asks for the durations of each phase of breathing(in seconds), the l
 
 ## Future improvements
 
-- Customize the background and shape colors.
 - Configure a graphical interface to select the type of figure and session durations.
 - Package it as an app.
