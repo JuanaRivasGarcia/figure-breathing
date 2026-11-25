@@ -5,6 +5,7 @@ from abc import ABC, abstractmethod
 import math
 import tkinter as tk
 import time
+from PIL import Image, ImageTk
 
 
 class Figure(ABC):
@@ -81,22 +82,11 @@ initial_size = 20
 final_size = 100
 growth = final_size - initial_size
 delay = 20 # Milliseconds between each step of the animation
-dark_colours = {
-    "descent": "#3D3219",
-    "support": "#837C37",
-    "release": "#507088",
-    "confidence": "#44584D",
-    "depth": "#293933",
-    "integration": "#858667",
-}
-
-light_colours = {
-    "breath": "#7D9CC4",
-    "threshold": "#93ACA4",
-    "clarity": "#CEDBFE",
-    "relief": "#EFEEEB",
-    "pause": "#CED4CD",
-    "balance": "#B0B8A3",
+backgrounds = {
+    "sea":    {"image": "images/mar.jpg",       "colour": "#F2C88A"},
+    "marble": {"image": "images/marmol.jpg",    "colour": "#F4A77A"},
+    "nebula": {"image": "images/nebulosa.jpg",  "colour": "#B8EDDF"},
+    "clouds": {"image": "images/nubes.jpg",     "colour": "#4A5288"},
 }
 
 # --- Functions ---
@@ -189,11 +179,9 @@ session = ask_number("How many minutes should the session last?: ")
 session_seconds = minutes_to_seconds(session)
 # Session context(start_time, session_seconds) stays global on purpose:
 # It's not phase data passed through the cycle, so we don't thread it as arguments.
-
-figure_colour = ask_colour("Choose a shape colour (descent, support, release, " \
-                            "confidence, depth or integration):", dark_colours)
-background_colour = ask_colour("Choose a background colour (breath, threshold, " \
-                            "clarity, relief, pause or balance): ", light_colours)
+chosen = ask_colour("Choose a background (sea, marble, nebula, clouds): ", backgrounds)
+background_image = chosen["image"]
+figure_colour = chosen["colour"]
 
 ## --- Choose figure ---
 while True:
@@ -210,8 +198,13 @@ while True:
 # --- Setting the table ---
 window = tk.Tk()
 window.title("Breathing")
-canvas = tk.Canvas(window, width=400, height=400, bg=background_colour)
+canvas = tk.Canvas(window, width=400, height=400)
 canvas.pack()
+
+# --- Load and display the image ---
+bg_image = Image.open(background_image).resize((400, 400))
+bg_photo = ImageTk.PhotoImage(bg_image)
+canvas.create_image(0, 0, anchor="nw", image=bg_photo)
 
 # --- Creation of the figure ---
 if figure_choice == "circle":
