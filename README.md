@@ -8,17 +8,18 @@ A terminal app that draws a geometric shape. The shape moves in sync with your b
 - Always ends on an exhalation.
 - Choose between 3-phase or 4-phase breathing.
 - Validates input, so invalid answers don’t crash the program.
-- Customize the background and shape colors.
+- Choose from several image backgrounds, each with a matching shape colour.
 
 ## Requirements
 - Python 3.x
 - Tkinter, usually included with Python; on Debian/Ubuntu Linux, install it with `sudo apt install python3-tk`.
+- Pillow, for loading the background images. Install the dependencies with `pip install -r requirements.txt`
 
 ## Usage 
 ```bash
-python3 figura.py
+python3 breathing.py
 ```
-The program asks for the durations of each phase of breathing(in seconds), the length of the session(in minutes), and the type of geometric shape. Finally, a window opens showing the shape breathing.
+The program asks for the durations of each phase of breathing (in seconds), the length of the session (in minutes), the type of geometric shape and the background. Finally, a window opens showing the shape breathing.
 
 ## Design notes
 - **Liskov:** This project is designed to practice the SOLID principles. There is an abstract class `Figure` and three child classes: `Circle`, `Triangle`, and `Star`, each of which can be substituted for the others without causing the program to fail. 
@@ -38,5 +39,9 @@ The program asks for the durations of each phase of breathing(in seconds), the l
 
 ## Future improvements
 
+- Add soft, blurred edges to the shapes.
 - Configure a graphical interface to select the type of figure and session durations.
 - Package it as an app.
+
+## Credits
+- Background images from [Pexels](https://www.pexels.com).
